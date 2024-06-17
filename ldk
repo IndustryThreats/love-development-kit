@@ -1,0 +1,96 @@
+#!/bin/bash
+
+SCRIPT_VERSION="0.1.0"
+LOVE="/usr/bin/love"
+
+MODE=$1
+PROJECT=$2
+
+echo -e \ ======================
+echo -e \  LOVE DEVELOPMENT KIT
+echo -e \ made by synical at 3am
+echo -e \ ======================
+
+# Checks if the action provided is valid, if so, it runs it.
+function check_action() {
+	if [[ $(type -t $1) == function ]]; then
+		$1
+	else
+		echo "[error] Invalid action: ${MODE}"
+		exit 101
+	fi
+}
+
+# Bundles the project into a zip file (.love)
+function action_bundle() {
+	mkdir $PWD/bundle/ # Create temp folder
+	cp -r $PWD/src/** ./bundle/ &> /dev/null # Copy src
+	cp -r $PWD/assets ./bundle/ &> /dev/null # Copy assets
+	OUTPUT="$PWD/build/${PROJECT}.love" # Set the output target
+
+	if test -f ${OUTPUT}; then # Check if a previous build exists
+		rm $PWD/build/$PROJECT.love # remove previous build
+	fi
+
+	echo "[info] Bundling..."
+	cd $PWD/bundle/ # We have to cd into the temp folder so it can be the root of the zip
+	`zip -q -9 -r ${OUTPUT} .` # Create the zip file
+	cd .. # Go back to the project root
+
+	if test -f "${OUTPUT}"; then # Check if a zip file was created
+		echo "[info] Bundled successfully, verifying..."
+		local VERIF=`zip -T ${OUTPUT}` # Verify the zip file
+		rm -r $PWD/bundle/ &> /dev/null # remove the temp folder
+
+		if test "${VERIF}" != "test of ${OUTPUT} OK"; then # check if the zip verified
+			echo "[warn] Failed to verify, proceed with caution."
+			exit 200 # bad zip
+		else
+			rm -r $PWD/bundle/ &> /dev/null # remove temp folder
+			echo "[info] Verified successfully."
+			return # return allows action_dev to work
+		fi
+	else
+		echo "[error] Failed to create bundle."
+		exit 201 # Zip failed to create
+	fi
+}
+
+function action_version {
+	echo "[info] Using version: LDT $SCRIPT_VERSION"
+}
+
+function action_help {
+	echo -e "usage:"
+	echo -e "\tlbt <action> <...>\n"
+
+	echo -e "actions:"
+	echo -e "\tbundle <project_name> - Bundles a project"
+	echo -e "\tdev <project_name> - Bundles, then runs a project. Useful for testing"
+	echo -e "\tversion - Displays the current LBT version"
+	echo -e "\thelp - Displays this message"
+}
+
+function action_dev {
+	action_bundle
+	echo "[info] Starting ${PROJECT}..."
+	RUN="${LOVE} $PWD/build/${PROJECT}.love"
+	$RUN
+}
+
+# Check if Love2D is installed, and an action is provided
+if test "${MODE}" != "" && test -f "${LOVE}"; then
+	# Output Love2D's version
+	VERSION="${LOVE} --version"
+	echo "[info] Using version: `${VERSION}`"
+
+	# Check if action is valid
+	cd $PWD
+	ACTION="action_${MODE}"
+	check_action "${ACTION}"
+elif test -f "${LOVE}"; then
+	action_help
+else
+	echo "[error] Failed to locate Love2D. Change your path!"
+	exit 100
+fi
