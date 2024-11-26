@@ -3,7 +3,9 @@
   "module": "src/index.ts",
   "type": "module",
   "scripts": {
-    "compile": "bun build --compile ./src/index.ts --outfile ldk"
+    "debug": "bun build --compile ./src/index.ts --outfile ldk",
+    "release": "bun debug --minify --compile",
+    "install": "bun release && sudo cp ./ldk /usr/local/bin/"
   },
   "devDependencies": {
     "@types/bun": "latest"
