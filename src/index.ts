@@ -13,8 +13,20 @@ program
 
 	program.command("init")
 	.description("Creates an empty LOVE2D project.")
-	.action(() => {
-		Logger.warn("Not implemented yet.");
+	.argument("<project-name>", "name of the new project")
+	.action((projectname) => {
+		Bun.spawn(["npx", "--yes", "degit", "Rentless-Garage/ldk-project-template#main", projectname], {
+			cwd: process.cwd(),
+			env: {...process.env},
+			stdout: "ignore",
+			onExit(proc, exitCode, signalCode, error) {
+				if (proc.exitCode == 0) {
+					Logger.info("Created project", `'${projectname}'`, chalk.greenBright("✔"));
+				} else {
+					Logger.err("Failed to create project, is npm installed?");
+				}
+			}
+		});
 	});
 
 program.command("bundle")
