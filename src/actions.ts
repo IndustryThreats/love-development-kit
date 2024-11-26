@@ -34,6 +34,14 @@ export async function bundleProject(project: Project) {
 	const zip = new JSZip();
 	zip.folder("assets");
 
+	// check if game.png exists
+	const gameIcon = f("game.png");
+	if (await fsp.exists(gameIcon)) {
+		// write the icon to the zip file
+		const contents = await fsp.readFile(gameIcon);
+		zip.file("game.png", new Uint8Array(contents.buffer, contents.byteOffset, contents.length));
+	}
+
 	// add assets
 	await bundleFiles("assets", zip).finally(() => {
 		Logger.info("Bundled assets", chalk.greenBright("✔"))
