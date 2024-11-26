@@ -2,6 +2,9 @@
   "name": "love-development-kit",
   "module": "src/index.ts",
   "type": "module",
+  "scripts": {
+    "compile": "bun build --compile ./src/index.ts --outfile ldk",
+  },
   "devDependencies": {
     "@types/bun": "latest"
   },
