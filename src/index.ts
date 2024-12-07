@@ -9,7 +9,7 @@ import chalk from "chalk";
 program
 	.name("ldk")
 	.description("Bundle, test, and distribute LOVE2D games with ease.")
-	.version("0.2.0");
+	.version("0.2.1");
 
 	program.command("init")
 	.description("Creates an empty LOVE2D project.")

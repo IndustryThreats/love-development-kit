@@ -60,9 +60,8 @@ export async function bundleProject(project: Project) {
 			zip.folder("lib");
 			await Promise.all(
 				locallibs.map(async (lib) => {
-					const filename = lib.substring(libFolder.length + libFolder.indexOf(libFolder));
-					const contents = await fsp.readFile(f(`lib/${filename}`), {encoding: "utf8"});
-					zip.file(`lib/${filename}`, contents);
+					const contents = await fsp.readFile(f(lib), {encoding: "utf8"});
+					zip.file(lib, contents);
 				})
 			).finally(() => {
 				if (locallibs.length != -1) {
