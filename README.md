@@ -1,6 +1,6 @@
 # love-development-kit
 
-## > [!WARNING] LDK is undergoing a major refactor, read more [here](./doc/0.3-REFACTOR.md)).
+## ⚠️ LDK is undergoing a major refactor, read more [here](./doc/0.3-REFACTOR.md)).
 
 The Swiss Army knife for creating and distributing LOVE2D games.
 
