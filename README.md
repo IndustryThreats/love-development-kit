@@ -1,5 +1,7 @@
 # love-development-kit
 
+## :> [!WARNING] LDK is undergoing a major refactor, read more [here](./doc/0.3-REFACTOR.md)).
+
 The Swiss Army knife for creating and distributing LOVE2D games.
 
 ## Getting Started
@@ -25,9 +27,8 @@ Using luarocks in you're game? LDK supports it!
 Just edit you're ldk.project.json and add these fields;
 > Note: C Modules will not work with LOVE2D. Make sure your modules are pure lua!
 ```jsonc
-// LDK WILL REJECT COMMENTS!! MAKE SURE TO REMOVE THEM!
 {
-    "luaversion": "[MAJOR.MINOR]", // example: 5.1
+    "luaversion": "MAJOR.MINOR", //
     "luarocks": true
 }
 ```
